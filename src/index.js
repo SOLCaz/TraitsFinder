@@ -12,7 +12,7 @@ ReactDOM.render(
       <Route exact path="/">
         <Home />
       </Route>
-      <Route path="/:id/:contract/:size">
+      <Route path="/:id/:contract">
         <RarityInfo />
       </Route>
     </Router>

@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import IPFS from "ipfs";
 import { createPortal } from 'react-dom';
 import MyForm from '../components/MyForm';
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+import axios from "axios";
 
 const { create } = require('ipfs-http-client')
 const client = create('http://localhost:8080'); // (the default in Node.js)
@@ -11,7 +12,12 @@ const client = create('http://localhost:8080'); // (the default in Node.js)
  * 
  * @param {string} CID 
  */
-async function initIpfs(CID, collection_size) {
+
+async function getApiData(url) {
+    const response = await axios.get(url)
+    return response.data;
+}
+async function initIpfs(CID, first, last) {
 
     //Utilisation de l'HTTP client => le serveur doit faire tourner sa propre node IPFS
 
@@ -19,14 +25,15 @@ async function initIpfs(CID, collection_size) {
 
     //tableau de promises vide
     var metadata_array = [];
-
+    var collection_size = last - first;
 
     //On stocke chaque promise dans le tableau sans attendre le retour de la précédente
-    for (let i = 1; i <= collection_size; i++) {
+    for (let i = first; i < last; i++) {
         let fullpath = CID + '/' + i.toString();
-        const stream = client.cat(fullpath);
+        let url = 'http://127.0.0.1:8080/ipfs/' + fullpath
+        //const stream = client.cat(fullpath);
         try {
-            const result = await getChunks(stream);
+            const result = await getApiData(url);
             metadata_array.push(result);
         } catch (err) {
             console.log(err);
@@ -128,11 +135,16 @@ function calc_collection_rarity(metadata_array, collection_size) {
 
 }
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 
 function RarityInfo() {
 
-    const { id: CID, contract, size } = useParams();
+    const { id: CID, contract } = useParams();
+    const first = useQuery().get("first");
+    const last = useQuery().get("last");
 
 
     const [loading, setLoading] = useState(true);
@@ -166,7 +178,7 @@ function RarityInfo() {
     useEffect(() => {
         setLoading(true)
         const init = async () => {
-            const { rarity_data: res, metadata_array: nft_collection } = await initIpfs(CID, size);
+            const { rarity_data: res, metadata_array: nft_collection } = await initIpfs(CID, first, last);
             setRarityData(res)
             setLoading(false);
             console.log(rarityData)
