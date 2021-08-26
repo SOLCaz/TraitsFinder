@@ -1,0 +1,14 @@
+{
+    "traits_types": [
+        {
+            "name": "Background",
+            "values": [
+                {
+                    "name": "Dragon",
+                    "count": 10,
+                }
+            ],
+            "count": 20
+        }
+    ]
+}
