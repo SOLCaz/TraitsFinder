@@ -1,12 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { HashRouter as Router, Route, Redirect } from 'react-router-dom'
 import './index.css';
-import App from './App';
+import Home from './pages/Home';
+import RarityInfo from './pages/RarityInfo';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Route exact path="/">
+        <Home />
+      </Route>
+      <Route path="/:id/:contract/:size">
+        <RarityInfo />
+      </Route>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
