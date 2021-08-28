@@ -1,55 +1,48 @@
 import axios from "axios";
 
 
-export async function getApiData(url) {
-    const response = await axios.get(url);
-    return response.data;
+export function getApiData(url) {
+    const response = axios.get(url);
+    return response;
 }
 
 /**
  * 
  * @param {string} CID 
  */
-export async function initIpfs(CID, first, last, isIPFS) {
 
-    //Utilisation de l'HTTP client => le serveur doit faire tourner sa propre node IPFS
+export function buildPromise(CID, iteration, isIPFS, promises) {
 
-    //const node = await IPFS.create()
-
-    //tableau de promises vide
-    var metadata_array = [];
-    var collection_size = last - first;
     var base_url;
 
     if (isIPFS === true) {
         base_url = 'http://127.0.0.1:8080/ipfs/' + CID + '/';
     }
     else {
-        console.log("ELSE");
         base_url = CID;
     }
-    console.log(base_url);
 
-    //On stocke chaque promise dans le tableau sans attendre le retour de la précédente
-    for (let i = first; i < last; i++) {
-        console.log(isIPFS);
-        console.log(base_url);
-        let url = base_url + i.toString();
-        //const stream = client.cat(fullpath);
-        try {
-            const result = await getApiData(url);
-            if (i % 5 == 0)
-                metadata_array.push(result);
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    let url = base_url + iteration.toString();
+    promises.push(getApiData(url))
+    return (promises)
+
+}
+export async function sendRequests(first, iteration, promises) {
+
+    let new_data = [];
+    let values = await Promise.all(promises);
+    values.forEach((value) => {
+        new_data.push(value.data);
+    })
+    return new_data;
+
+}
+export function getCollectionData(metadata_array, collection_size) {
 
     let rarity_data = calc_collection_rarity(metadata_array, collection_size);
     calc_mint_rarity(metadata_array, rarity_data);
     metadata_array.sort((a, b) => a.rarity_score - b.rarity_score);
-    console.log(metadata_array);
-    return { rarity_data: rarity_data, metadata_array: metadata_array };
+    return { rarity_data: rarity_data, _nftDataArray: metadata_array };
 
 }
 
@@ -59,7 +52,6 @@ export function calc_mint_rarity(metadata_array, rarity_data) {
         object.attributes.forEach((attribute) => {
             let type = rarity_data.traits_types.find(o => o.name === attribute.trait_type);
             let value = type.values.find(o => o.name === attribute.value);
-            console.log(value);
             //console.log(trait_type_info.values[index].name, "===", trait_value.toString())
             rarity_score *= +value.absoluteRate;
 
