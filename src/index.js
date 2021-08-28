@@ -9,10 +9,7 @@ import reportWebVitals from './reportWebVitals';
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <Route exact path="/">
-        <Home />
-      </Route>
-      <Route path="/:id/:contract">
+      <Route exact path="/browse">
         <RarityInfo />
       </Route>
     </Router>

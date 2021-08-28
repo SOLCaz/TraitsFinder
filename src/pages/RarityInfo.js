@@ -4,136 +4,10 @@ import { createPortal } from 'react-dom';
 import MyForm from '../components/MyForm';
 import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
+import { initIpfs } from '../utils/calc';
 
-const { create } = require('ipfs-http-client')
+const { create } = require('ipfs-http-client');
 const client = create('http://localhost:8080'); // (the default in Node.js)
-
-/**
- * 
- * @param {string} CID 
- */
-
-async function getApiData(url) {
-    const response = await axios.get(url)
-    return response.data;
-}
-async function initIpfs(CID, first, last) {
-
-    //Utilisation de l'HTTP client => le serveur doit faire tourner sa propre node IPFS
-
-    //const node = await IPFS.create()
-
-    //tableau de promises vide
-    var metadata_array = [];
-    var collection_size = last - first;
-
-    //On stocke chaque promise dans le tableau sans attendre le retour de la précédente
-    for (let i = first; i < last; i++) {
-        let fullpath = CID + '/' + i.toString();
-        let url = 'http://127.0.0.1:8080/ipfs/' + fullpath
-        //const stream = client.cat(fullpath);
-        try {
-            const result = await getApiData(url);
-            metadata_array.push(result);
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    let rarity_data = calc_collection_rarity(metadata_array, collection_size);
-    calc_mint_rarity(metadata_array, rarity_data)
-    metadata_array.sort((a, b) => a.rarity_score - b.rarity_score)
-    console.log(metadata_array)
-    return { rarity_data: rarity_data, metadata_array: metadata_array };
-
-}
-
-function calc_mint_rarity(metadata_array, rarity_data) {
-    metadata_array.forEach((object) => {
-        let rarity_score = 1;
-        object.attributes.forEach((attribute) => {
-            let type = rarity_data.traits_types.find(o => o.name === attribute.trait_type);
-            let value = type.values.find(o => o.name === attribute.value)
-            console.log(value)
-            //console.log(trait_type_info.values[index].name, "===", trait_value.toString())
-            rarity_score *= +value.absoluteRate
-
-
-        })
-        // console.log(object)
-        // console.log(rarity_score)
-        object["rarity_score"] = rarity_score;
-
-    })
-    //console.log(metadata_array)
-}
-
-/**
- * 
- * @param {*} stream 
- * @returns json-object of queryied data
- */
-async function getChunks(stream) {
-    let data = ''
-    for await (const chunk of stream) {
-        // chunks of data are returned as a Buffer, convert it back to a string
-        data = JSON.parse(new TextDecoder().decode(chunk))
-        //console.log(data)
-        return data;
-    }
-}
-
-/**
- * 
- * @param {*} metadata_array les données de l'ensemble des objets de la collection
- * 
- */
-function calc_collection_rarity(metadata_array, collection_size) {
-    var propertyToTrait = {
-        "traits_types": [
-        ]
-    }
-
-
-    metadata_array.forEach((object) => {
-
-        object.attributes.forEach((attribute) => {
-
-            //Si le TYPE existe on INCREMENTE LE COMPTE
-            let type = propertyToTrait.traits_types.find(o => o.name === attribute.trait_type)
-            if (type !== undefined) {
-                type.count++;
-                //Si la VALEUR existe on INCREMENTE sinon on la CREE et INITIALISE
-                let value = type.values.find(o => o.name === attribute.value)
-                if (value !== undefined) {
-                    value.count++;
-                }
-                else {
-                    type.values.push({ "name": attribute.value, "count": 1 })
-                }
-                //Si le TYPE n'existe PAS alors la VALEUR NON PLUS
-            } else {
-                propertyToTrait.traits_types.push({ "name": attribute.trait_type, "values": [{ "name": attribute.value, "count": 1 }], "count": 1 })
-            }
-
-        });
-
-
-    });
-
-
-    propertyToTrait.traits_types.forEach((property) => {
-        property['propertyRate'] = property['count'] / collection_size * 100;
-        property['values'].forEach((value) => {
-            value['relativeRate'] = ((value['count'] / property['count'])) * 100
-            value['absoluteRate'] = ((value['count'] / property['count']) * 100 * property['propertyRate'] / 100)
-        })
-    })
-
-
-    return propertyToTrait;
-
-}
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -142,54 +16,41 @@ function useQuery() {
 
 function RarityInfo() {
 
-    const { id: CID, contract } = useParams();
+    //const { id: CID, contract } = useParams();
     const first = useQuery().get("first");
     const last = useQuery().get("last");
+    const isIPFS = useQuery().get("isIPFS");
 
-
+    const [CID, setCID] = useState('');
+    const [contract, setContract] = useState('');
     const [loading, setLoading] = useState(true);
     const [rarityData, setRarityData] = useState([]);
     const [stateRarity, setStateRarity] = useState([])
     const [nftCollection, setNftCollection] = useState([])
+    const [submit, setSubmit] = useState(false);
+
 
 
     //const CID = "QmWCGPXpJMmDbSgRaEXi5E7bvk547sLYUAtG4VpncVKmDk"
-
-    async function getRarityById(CID, mintId) {
-
-        let fullpath = CID + '/' + mintId.toString();
-        const stream = client.cat(fullpath);
-        try {
-            const result = await getChunks(stream);
-            console.log(result)
-            result.attributes.forEach((attribute) => {
-                const trait_type = attribute.trait_type;
-                console.log(trait_type)
-
-            })
-
-        } catch (err) {
-            console.log(err);
-        }
-
-    }
-
+    //0x5e198af285388ba69bd2475a2c60ed9a9b55098a
 
     useEffect(() => {
-        setLoading(true)
+        setLoading(true);
         const init = async () => {
-            const { rarity_data: res, metadata_array: nft_collection } = await initIpfs(CID, first, last);
-            setRarityData(res)
+            const { rarity_data: res, metadata_array: nft_collection } = await initIpfs(CID, first, last, false);
+            setRarityData(res);
             setLoading(false);
-            console.log(rarityData)
-            setNftCollection(nft_collection)
-            console.log(nftCollection)
-            //const myRarity = await getRarityById(CID, 390);
-            //setStateRarity(myRarity)
+            console.log(rarityData);
+            setNftCollection(nft_collection);
+            console.log(nftCollection);
         }
         init();
 
 
+    }, [submit]);
+
+    useEffect(() => {
+        setLoading(true)
     }, []);
 
 
@@ -198,7 +59,7 @@ function RarityInfo() {
 
     return (
         <div className="App">
-            <MyForm></MyForm>
+            <MyForm CID={CID} setCID={setCID} contract={contract} setContract={setContract} submit={submit} setSubmit={setSubmit}></MyForm>
             {loading === true ? <p>loading</p> :
                 <>
                     <div>
@@ -221,12 +82,12 @@ function RarityInfo() {
                     <div>
                         {
                             nftCollection.map((nft) => {
-                                const number = nft.name.split('#')[1]
+                                const number = nft.name.split('#')[1] || nft.id
                                 console.log(number)
 
                                 return (
                                     <p>
-                                        openSeaLink : <a href={`https://opensea.io/assets/${contract}/${number}`}>{number}</a>
+                                        openSeaLink : <a href={`https://opensea.io/assets/${contract}/${number}`}>#{number}</a>
                                     </p>
                                 );
                             })

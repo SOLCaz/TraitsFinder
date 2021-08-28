@@ -1,25 +1,27 @@
 import { useHistory } from "react-router-dom";
 import { useState } from "react"
 
-function MyForm() {
+function MyForm({ CID, setCID, contract, setContract, submit, setSubmit }) {
 
     let history = useHistory();
-    const [URI, setURI] = useState('');
-    const [CONTRACT, setCONTRACT] = useState('');
+    //const [URI, setURI] = useState('');
+    //const [CONTRACT, setCONTRACT] = useState('');
     const [first, setFirst] = useState('');
     const [last, setLast] = useState('');
+    const [checked, setChecked] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        history.push(`/${URI}/${CONTRACT}?first=${first}&last=${last}`)
+        history.push(`/browse?first=${first}&last=${last}&isIPFS=${checked}`)
+        setSubmit(!submit)
     }
 
     const handleURIChange = (e) => {
-        setURI(e.target.value)
+        setCID(e.target.value)
     }
 
     const handleContractChange = (e) => {
-        setCONTRACT(e.target.value)
+        setContract(e.target.value)
     }
 
     const handleFirstChange = (e) => {
@@ -30,20 +32,25 @@ function MyForm() {
         setLast(e.target.value)
     }
 
+    const handleToggle = (e) => {
+        setChecked(e.target.checked)
+    }
+
 
     return (
         <form onSubmit={e => { handleSubmit(e) }}>
-            <label>tokenURI:
-                <input type="text" name="tokenURI" onChange={handleURIChange} />
+            <label>apiURL:
+                <input type="text" name="apiURL" onChange={handleURIChange} />
             </label>
+            <input type="checkbox" onChange={handleToggle} name="checkBox" />
             <label>contract address:
-                <input type="text" name="tokenURI" onChange={handleContractChange} />
+                <input type="text" name="address" onChange={handleContractChange} />
             </label>
             <label>first id:
-                <input type="text" name="tokenURI" onChange={handleFirstChange} />
+                <input type="text" name="first" onChange={handleFirstChange} />
             </label>
             <label>last id:
-                <input type="text" name="tokenURI" onChange={handleLastChange} />
+                <input type="text" name="last" onChange={handleLastChange} />
             </label>
             <input type="submit" value="Submit" />
         </form>
