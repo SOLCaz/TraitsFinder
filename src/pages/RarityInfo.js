@@ -5,7 +5,8 @@ import MyForm from '../components/MyForm';
 import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import { sendRequests, buildPromise, getCollectionData } from '../utils/calc';
-
+import TraitsTable from "../components/TraitsTable";
+import { LinkPreview } from '@dhaiwat10/react-link-preview';
 const { create } = require('ipfs-http-client');
 const client = create('http://localhost:8080'); // (the default in Node.js)
 
@@ -45,7 +46,7 @@ function RarityInfo() {
 
             for (let i = first; i <= last; i++) {
 
-                if (i % 3 === 0 || i === last) {
+                if (i % 100 === 0 || i === last) {
                     let collection_size = i - first + 1;
                     console.log(collection_size)
 
@@ -101,37 +102,28 @@ function RarityInfo() {
                             rarityData !== undefined && rarityData.traits_types.map((trait) => {
                                 return (
                                     <div>
-                                        <table>
-                                            <tr>
-                                                <th>
-                                                    <h2>{trait.name} : {trait.propertyRate} %</h2>
-                                                </th>
-                                            </tr>
-                                            {trait.values.map((value) => {
-                                                return (
-                                                    <tr><td>{value.name}</td> <td>{value.absoluteRate} %</td></tr>
-                                                );
-                                            })
-                                            }
-                                        </table>
+                                        <TraitsTable trait={trait}></TraitsTable>
                                     </div>
                                 );
                             })
                         }
                     </div>
                     <div>
-                        {
-                            nftDataArray !== undefined && nftDataArray.map((nft) => {
-                                const number = nft.name.split('#')[1] || nft.id
+                        <ul>
+                            {
+                                nftDataArray !== undefined && nftDataArray.map((nft) => {
+                                    const number = nft.image.split('/')[3].split('.')[0]
+                                    //const number = nft.image.split(CID + '/')[1].split(".")[0] || nft.id
+                                    let url = `https://opensea.io/assets/${contract}/${number}`;
 
-                                return (
-                                    <p>
-                                        openSeaLink : <a href={`https://opensea.io/assets/${contract}/${number}`}>#{number}</a>
-                                    </p>
-                                );
-                            })
-                        }
-
+                                    return (
+                                        <li>
+                                            openSeaLink : <a href={url}>#{number}</a>
+                                        </li>
+                                    );
+                                })
+                            }
+                        </ul>
                     </div>
                 </>
 

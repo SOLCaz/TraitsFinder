@@ -65,6 +65,7 @@ export function calc_mint_rarity(metadata_array, rarity_data) {
     //console.log(metadata_array)
 }
 
+
 /**
  * 
  * @param {*} metadata_array les données de l'ensemble des objets de la collection
