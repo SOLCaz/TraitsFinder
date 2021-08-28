@@ -101,13 +101,19 @@ function RarityInfo() {
                             rarityData !== undefined && rarityData.traits_types.map((trait) => {
                                 return (
                                     <div>
-                                        <h2>{trait.name} : {trait.propertyRate} %</h2>
-                                        {trait.values.map((value) => {
-                                            return (
-                                                <li>{value.name}, {value.absoluteRate} %</li>
-                                            );
-                                        })
-                                        }
+                                        <table>
+                                            <tr>
+                                                <th>
+                                                    <h2>{trait.name} : {trait.propertyRate} %</h2>
+                                                </th>
+                                            </tr>
+                                            {trait.values.map((value) => {
+                                                return (
+                                                    <tr><td>{value.name}</td> <td>{value.absoluteRate} %</td></tr>
+                                                );
+                                            })
+                                            }
+                                        </table>
                                     </div>
                                 );
                             })
