@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import IPFS from "ipfs";
 import { createPortal } from 'react-dom';
 import MyForm from '../components/MyForm';
@@ -29,6 +29,7 @@ function RarityInfo() {
     const [stateRarity, setStateRarity] = useState([])
     const [nftDataArray, setNftDataArray] = useState([])
     const [submit, setSubmit] = useState(true);
+    const isFirstRun = useRef(true);
 
 
 
@@ -39,6 +40,10 @@ function RarityInfo() {
 
     useEffect(() => {
         setLoading(true);
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+            return;
+        }
         const init = async () => {
 
             let promises = [];
@@ -48,7 +53,6 @@ function RarityInfo() {
 
                 if (i % 100 === 0 || i === last) {
                     let collection_size = i - first + 1;
-                    console.log(collection_size)
 
                     buildPromise(CID, i, isIPFS, promises);
                     let new_data = await sendRequests(first, i, promises)
@@ -83,7 +87,6 @@ function RarityInfo() {
     }, []);
 
     useEffect(() => {
-        console.log(rarityData);
         setLoading(false);
 
     }, [rarityData]);
@@ -112,8 +115,9 @@ function RarityInfo() {
                         <ul>
                             {
                                 nftDataArray !== undefined && nftDataArray.map((nft) => {
-                                    const number = nft.image.split('/')[3].split('.')[0]
+                                    //const number = nft.image.split('/').pop();
                                     //const number = nft.image.split(CID + '/')[1].split(".")[0] || nft.id
+                                    const number = nft["id"];
                                     let url = `https://opensea.io/assets/${contract}/${number}`;
 
                                     return (

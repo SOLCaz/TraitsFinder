@@ -30,8 +30,10 @@ export function buildPromise(CID, iteration, isIPFS, promises) {
 export async function sendRequests(first, iteration, promises) {
 
     let new_data = [];
-    let values = await Promise.all(promises);
+    const results = await Promise.all(promises.map(p => p.catch(e => e)));
+    const values = results.filter(result => !(result instanceof Error));
     values.forEach((value) => {
+        value.data["id"] = value.config.url.split('/').pop();
         new_data.push(value.data);
     })
     return new_data;
@@ -47,7 +49,7 @@ export function getCollectionData(metadata_array, collection_size) {
 }
 
 export function calc_mint_rarity(metadata_array, rarity_data) {
-    metadata_array.forEach((object) => {
+    metadata_array.forEach((object, index) => {
         let rarity_score = 1;
         object.attributes.forEach((attribute) => {
             let type = rarity_data.traits_types.find(o => o.name === attribute.trait_type);
