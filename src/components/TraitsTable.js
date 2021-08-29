@@ -3,12 +3,13 @@ import { css } from "styled-components";
 
 
 const TableWrapper = styled.div`
-	height:500px;
-   width:100%%;
-   overflow-x:scroll;
+ 	overflow-x:scroll;
+   height:500px;
    margin:30px;
+
 `
 const Table = styled.table`
+   
 	display:table;
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
@@ -16,8 +17,7 @@ const Table = styled.table`
   	overflow: hidden;
     width: 90%;
 	justify-self:center;
-	align-self:start;
-	margin:10px;
+	align-self:center;
 `
 const sharedStyle = css`
     border-radius:10px;
