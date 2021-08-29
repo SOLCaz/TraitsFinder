@@ -7,6 +7,18 @@ import axios from "axios";
 import { sendRequests, buildPromise, getCollectionData } from '../utils/calc';
 import TraitsTable from "../components/TraitsTable";
 import { LinkPreview } from '@dhaiwat10/react-link-preview';
+import styled from "styled-components";
+import RankTable from "../components/RankTable";
+
+const TableContainer = styled.div`
+    display:grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-auto-rows: minmax(min-content, max-content);
+`
+
+
+
+
 const { create } = require('ipfs-http-client');
 const client = create('http://localhost:8080'); // (the default in Node.js)
 
@@ -98,36 +110,21 @@ function RarityInfo() {
     return (
         <div className="App">
             <MyForm CID={CID} setCID={setCID} contract={contract} setContract={setContract} submit={submit} setSubmit={setSubmit}></MyForm>
-            {loading === true ? <p>loading</p> :
+            {loading === true || isFirstRun.current ? <p>loading</p> :
                 <>
-                    <div>
+                    <TableContainer>
                         {
                             rarityData !== undefined && rarityData.traits_types.map((trait) => {
                                 return (
-                                    <div>
-                                        <TraitsTable trait={trait}></TraitsTable>
-                                    </div>
+                                    <TraitsTable trait={trait}></TraitsTable>
                                 );
                             })
                         }
-                    </div>
+                    </TableContainer>
                     <div>
-                        <ul>
-                            {
-                                nftDataArray !== undefined && nftDataArray.map((nft) => {
-                                    //const number = nft.image.split('/').pop();
-                                    //const number = nft.image.split(CID + '/')[1].split(".")[0] || nft.id
-                                    const number = nft["id"];
-                                    let url = `https://opensea.io/assets/${contract}/${number}`;
+                        <RankTable nftDataArray={nftDataArray} contract={contract}>
 
-                                    return (
-                                        <li>
-                                            openSeaLink : <a href={url}>#{number}</a>
-                                        </li>
-                                    );
-                                })
-                            }
-                        </ul>
+                        </RankTable>
                     </div>
                 </>
 
