@@ -1,81 +1,30 @@
 import styled from "styled-components";
 import { css } from "styled-components";
+import '../styles/TraitsTable.css'
 
-
-const TableWrapper = styled.div`
- 	overflow-x:scroll;
-   height:500px;
-   margin:30px;
-
-`
-const Table = styled.table`
-   
-	display:table;
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    border-radius: 1em;
-  	overflow: hidden;
-    width: 90%;
-	justify-self:center;
-	align-self:center;
-`
-const sharedStyle = css`
-    border-radius:10px;
-    border: 1px solid #ddd;
-    padding: 8px;
-`
-const TH = styled.th`
-
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: #04AA6D;
-    color: white;
-`
-const TR = styled.tr`
-	width:100%;
-    background-color: #f2f2f2;
-    &:hover {
-        background-color: #ddd;
-    }
-
-`
-const TD = styled.td`
-    ${sharedStyle};
-
-`
-
-const THEAD = styled.thead`
-`
-
-const TBODY = styled.tbody`
-	
-`
 function TraitsTable({ trait }) {
 
 	return (
-		<TableWrapper>
-			<Table>
-				<THEAD>
-					<TR>
-						<TH>
-							<h2>{trait.name} : {trait.propertyRate.toFixed(4)} %</h2>
-						</TH>
-						<TH>
+		<div>
+			<table className="lol">
+				<thead>
+					<tr>
+						<th>
+							<h3>{trait.name} : {trait.propertyRate.toFixed(4)} %</h3>
+						</th>
 
-						</TH>
-					</TR>
-				</THEAD>
-				<TBODY>
+					</tr>
+				</thead>
+				<tbody>
 					{trait.values.map((value) => {
 						return (
-							<TR><TD>{value.name}</TD> <TD>{value.absoluteRate.toFixed(4)} %</TD></TR>
+							<tr><td>{value.name}</td> <td>{value.absoluteRate.toFixed(4)} %</td></tr>
 						);
 					})
 					}
-				</TBODY>
-			</Table>
-		</TableWrapper>
+				</tbody>
+			</table>
+		</div>
 	)
 }
 

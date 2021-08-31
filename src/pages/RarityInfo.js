@@ -17,8 +17,6 @@ const TableContainer = styled.div`
 `
 
 
-
-
 const { create } = require('ipfs-http-client');
 const client = create('http://localhost:8080'); // (the default in Node.js)
 
@@ -42,6 +40,8 @@ function RarityInfo() {
     const [nftDataArray, setNftDataArray] = useState([])
     const [submit, setSubmit] = useState(true);
     const isFirstRun = useRef(true);
+    const isFirstRun2 = useRef(true);
+
 
 
 
@@ -99,6 +99,11 @@ function RarityInfo() {
     }, []);
 
     useEffect(() => {
+
+        if (isFirstRun2.current) {
+            isFirstRun2.current = false;
+            return;
+        }
         setLoading(false);
 
     }, [rarityData]);
@@ -110,7 +115,7 @@ function RarityInfo() {
     return (
         <div className="App">
             <MyForm CID={CID} setCID={setCID} contract={contract} setContract={setContract} submit={submit} setSubmit={setSubmit}></MyForm>
-            {loading === true || isFirstRun.current ? <p>loading</p> :
+            {(loading === true || isFirstRun.current === true) ? <p>loading</p> :
                 <>
                     <TableContainer>
                         {
@@ -122,9 +127,8 @@ function RarityInfo() {
                         }
                     </TableContainer>
                     <div>
-                        <RankTable nftDataArray={nftDataArray} contract={contract}>
+                        <RankTable nftDataArray={nftDataArray} contract={contract} />
 
-                        </RankTable>
                     </div>
                 </>
 

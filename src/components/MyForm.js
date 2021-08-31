@@ -12,7 +12,7 @@ function MyForm({ CID, setCID, contract, setContract, submit, setSubmit }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        history.push(`/browse?first=${first}&last=${last}&isIPFS=${checked}`)
+        history.push(`?first=${first}&last=${last}&isIPFS=${checked}`)
         setSubmit(!submit)
     }
 

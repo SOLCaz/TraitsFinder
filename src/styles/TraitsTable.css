@@ -1,0 +1,42 @@
+div {
+    margin: 10px;
+}
+
+table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border-radius: 1em;
+    overflow: hidden;
+    width: 100%;
+    justify-self: center;
+    align-self: center;
+}
+
+th {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+}
+
+tr {
+    width: 100%;
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+table tbody {
+    display: block;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+table thead, table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
