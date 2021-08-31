@@ -5,7 +5,7 @@ import '../styles/TraitsTable.css'
 function TraitsTable({ trait }) {
 
 	return (
-		<div>
+		<div className="traitsDiv">
 			<table className="lol">
 				<thead>
 					<tr>

@@ -12,9 +12,13 @@ import RankTable from "../components/RankTable";
 
 const TableContainer = styled.div`
     display:grid;
-    grid-template-columns: 33% 33% 33%;
+    margin-right:25%;
+    margin-left:25%;
+    grid-template-columns: 50% 50%;
     grid-auto-rows: minmax(min-content, max-content);
 `
+
+
 
 
 const { create } = require('ipfs-http-client');

@@ -44,6 +44,10 @@ const RankWrapper = styled.div`
     
 `
 
+const StyledLink = styled.a`
+    color:#04BD01;
+`
+
 function RankTable({ nftDataArray, contract }) {
 
 
@@ -70,7 +74,7 @@ function RankTable({ nftDataArray, contract }) {
                                         #{index + 1}
                                     </td>
                                     <td>
-                                        <a href={url}>#{number}</a>
+                                        <StyledLink href={url}>#{number}</StyledLink>
                                     </td>
                                 </tr>
                             );
