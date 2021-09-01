@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@dhaiwat10/react-link-preview": "^1.9.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -10,8 +11,12 @@
     "ipfs": "^0.58.2",
     "ipfs-http-client": "^52.0.2",
     "js-ipfs": "0.0.301",
+    "metadata-scraper": "^0.2.36",
+    "metascraper": "^5.24.2",
+    "open-graph-scraper": "^4.9.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-meta-tags": "^1.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.0.1"
