@@ -41,9 +41,9 @@ const SubmitStyle = styled.input`
     margin: 4px 2px;
     cursor: pointer;
     border-radius:30px;
-    height:30px;
+    height:40px;
     width:120px;
-    text-align: center;
+
 `
 
 function MyForm({ CID, setCID, contract, setContract, submit, setSubmit }) {

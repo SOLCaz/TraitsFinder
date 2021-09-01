@@ -9,8 +9,10 @@ import TraitsTable from "../components/TraitsTable";
 import { LinkPreview } from '@dhaiwat10/react-link-preview';
 import styled from "styled-components";
 import RankTable from "../components/RankTable";
+import "../styles/TraitsTable.css"
+import { Spinner, ProgressBar } from "react-bootstrap";
 
-const TableContainer = styled.div`
+const TwoColumns = styled.div`
     display:grid;
     margin-right:25%;
     margin-left:25%;
@@ -18,6 +20,23 @@ const TableContainer = styled.div`
     grid-auto-rows: minmax(min-content, max-content);
 `
 
+const OneColumn = styled.div`
+    display:grid;
+    margin-right:15%;
+    margin-left:15%;
+    grid-template-columns: 100%;
+    grid-auto-rows: minmax(min-content, max-content);
+`
+const StatusWrapper = styled.div`
+    margin:10px;
+    display:grid;
+    margin-right:25%;
+    margin-left:25%;
+    grid-template-columns: 100%;
+    width:50%;
+    jusitfy-content:center;
+    align-items:center;
+`
 
 
 
@@ -45,9 +64,10 @@ function RarityInfo() {
     const [submit, setSubmit] = useState(true);
     const isFirstRun = useRef(true);
     const isFirstRun2 = useRef(true);
+    const [status, setStatus] = useState('1');
 
 
-
+    const nbOfRequests = 100
 
     //const CID = "QmWCGPXpJMmDbSgRaEXi5E7bvk547sLYUAtG4VpncVKmDk"
     //0x5e198af285388ba69bd2475a2c60ed9a9b55098a
@@ -64,11 +84,12 @@ function RarityInfo() {
 
             let promises = [];
             let metadata_array = [];
+            const collection_size = last - first + 1;
 
             for (let i = first; i <= last; i++) {
 
-                if (i % 100 === 0 || i === last) {
-                    let collection_size = i - first + 1;
+                if (i % nbOfRequests === 0 || i === last) {
+                    let analyzed_size = i - first + 1;
 
                     buildPromise(CID, i, isIPFS, promises);
                     let new_data = await sendRequests(first, i, promises)
@@ -76,11 +97,13 @@ function RarityInfo() {
                         metadata_array.push(data)
                     });
 
-                    const { rarity_data, _nftDataArray } = getCollectionData(metadata_array, collection_size);
+                    const { rarity_data, _nftDataArray } = getCollectionData(metadata_array, analyzed_size);
                     setRarityData(rarity_data);
                     setNftDataArray(_nftDataArray);
 
                     promises = [];
+                    const progress = ((i / collection_size) * 100).toFixed(0)
+                    setStatus(progress)
 
                 } else {
                     await buildPromise(CID, i, isIPFS, promises);
@@ -118,10 +141,15 @@ function RarityInfo() {
 
     return (
         <div className="App">
+
             <MyForm CID={CID} setCID={setCID} contract={contract} setContract={setContract} submit={submit} setSubmit={setSubmit}></MyForm>
             {(loading === true || isFirstRun.current === true) ? <p>loading</p> :
                 <>
-                    <TableContainer>
+                    <StatusWrapper>
+                        <ProgressBar variant="success" animated now={status} label={`${status}%`} />
+                    </StatusWrapper>
+                    <h2 style={{ 'text-align': "center" }}>Traits Rarity </h2>
+                    <TwoColumns>
                         {
                             rarityData !== undefined && rarityData.traits_types.map((trait) => {
                                 return (
@@ -129,10 +157,13 @@ function RarityInfo() {
                                 );
                             })
                         }
-                    </TableContainer>
+                    </TwoColumns>
                     <div>
-                        <RankTable nftDataArray={nftDataArray} contract={contract} />
+                        <h2 style={{ 'text-align': "center" }}>Rarity Rank </h2>
 
+                        <OneColumn>
+                            <RankTable nftDataArray={nftDataArray} contract={contract} />
+                        </OneColumn>
                     </div>
                 </>
 
