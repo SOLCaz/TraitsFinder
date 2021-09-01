@@ -102,7 +102,7 @@ function RarityInfo() {
                     setNftDataArray(_nftDataArray);
 
                     promises = [];
-                    const progress = ((i / collection_size) * 100).toFixed(0)
+                    const progress = (((i - first) / collection_size) * 100).toFixed(0)
                     setStatus(progress)
 
                 } else {
