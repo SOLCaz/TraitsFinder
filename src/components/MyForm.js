@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { useState } from "react"
-
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { css } from "styled-components"
 
@@ -47,7 +47,7 @@ const SubmitStyle = styled.input`
 
 `
 
-function MyForm({ CID, setCID, contract, setContract, submit, setSubmit }) {
+function MyForm() {
 
 
     let history = useHistory();
@@ -56,6 +56,10 @@ function MyForm({ CID, setCID, contract, setContract, submit, setSubmit }) {
     const [first, setFirst] = useState('');
     const [last, setLast] = useState('');
     const [checked, setChecked] = useState(false);
+
+    const [CID, setCID] = useState('');
+    const [contract, setContract] = useState('');
+    const [submit, setSubmit] = useState(true);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -104,8 +108,9 @@ function MyForm({ CID, setCID, contract, setContract, submit, setSubmit }) {
                     <label for="last">Last Collection ID</label>
                     
                     <input type="text"  name="last" onChange={handleLastChange} />
-                
-                <SubmitStyle type="submit" value="Submit" />
+                <Link to="/collection">
+                    <SubmitStyle type="submit" value="Submit" />
+                </Link>
 
             </form>
 

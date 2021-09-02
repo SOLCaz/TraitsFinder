@@ -29,10 +29,10 @@ form {
   input {
     padding: 0.4em;
     margin-bottom: 0.5rem;
+    color:white;
   }
   input:focus {
     outline: none;
-    color:white;
   }
   
   @media (min-width: 400px) {

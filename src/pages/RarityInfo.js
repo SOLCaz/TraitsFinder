@@ -48,8 +48,7 @@ function useQuery() {
 }
 
 
-function RarityInfo() {
-
+function RarityInfo(props){
     //const { id: CID, contract } = useParams();
     const first = Number(useQuery().get("first"));
     const last = Number(useQuery().get("last"));
