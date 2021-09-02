@@ -4,17 +4,18 @@ import { useState } from "react"
 import styled from "styled-components";
 import { css } from "styled-components"
 
+import '../styles/form.css'
 
-
-const FormWrapper = styled.div`
-    border-bottom:solid #4B4B4B;
-    border-width:3px;
-    height:100px;
-    display:flex;
-    width:100%;
-    justify-content:center;
-    align-items:center;
+const Form = styled.form`
+  display: grid;
+  padding: 1em;
+  background: transparent;
+  border: 1px solid #c1c1c1;
+  margin: 2rem auto 0 auto;
+  max-width: 600px;
+  padding: 1em;
 `
+
 const LabelStyle = styled.span`
     color:#73737A;
 `
@@ -84,28 +85,29 @@ function MyForm({ CID, setCID, contract, setContract, submit, setSubmit }) {
 
 
     return (
-        <FormWrapper>
 
             <form onSubmit={e => { handleSubmit(e) }}>
 
-                <label>
-                    <FormInput placeholder="metadata URL" type="text" name="apiURL" onChange={handleURIChange} />
-                </label>
-                <LabelStyle> metadata hosted on IPFS ?</LabelStyle>
-                <CheckboxStyle type="checkbox" onChange={handleToggle} name="checkBox" />
-                <label>
-                    <FormInput type="text" placeholder="contract" name="contract" onChange={handleContractChange} />
-                </label>
-                <label>
-                    <FormInput type="text" placeholder='first id' name="first" onChange={handleFirstChange} />
-                </label>
-                <label>
-                    <FormInput type="text" placeholder='last id' name="last" onChange={handleLastChange} />
-                </label>
+                    <label for="collection-data-url">Collection data URL</label>
+                    <input type="text" name="collection-data-url" onChange={handleURIChange} />
+                
+                <label for="checkBox"> metadata hosted on IPFS ?</label>
+                <input type="checkbox" onChange={handleToggle} name="checkBox" />
+                
+                    <label for="contract">Contract address</label>
+                    <input type="text"  name="contract" onChange={handleContractChange} />
+                
+                    <label for="first">First collection ID</label>
+                
+                    <input type="text"  name="first" onChange={handleFirstChange} />
+                
+                    <label for="last">Last Collection ID</label>
+                    
+                    <input type="text"  name="last" onChange={handleLastChange} />
+                
                 <SubmitStyle type="submit" value="Submit" />
 
             </form>
-        </FormWrapper>
 
     )
 }

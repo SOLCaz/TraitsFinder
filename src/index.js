@@ -5,14 +5,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import Home from './pages/Home';
 import RarityInfo from './pages/RarityInfo';
+import App from './components/App'
 
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <Route exact path="/">
-        <RarityInfo />
-      </Route>
+      <App/>
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

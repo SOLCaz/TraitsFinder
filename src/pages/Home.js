@@ -11,7 +11,7 @@ function Home() {
 
     return (
         <div className="App">
-            <MyForm></MyForm>
+            <h1>Welcome to TraitsFinder</h1>
         </div>
     );
 }
