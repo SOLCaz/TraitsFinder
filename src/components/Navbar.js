@@ -1,7 +1,10 @@
 import styled from "styled-components"
 import { Link } from "react-router-dom";
+import { useReducer } from "react";
+import { useHistory } from 'react-router'
 
-const HomeButton = styled.button`
+
+const NavButton = styled.button`
     background-color: #00D688;
     padding:8px 17px;
     border: none;
@@ -15,24 +18,36 @@ const HomeButton = styled.button`
 
 `
 
-function Navbar(){
+function Navbar() {
 
-    function handleHome(){
-        
+    const history = useHistory()
+
+    const [lastResetAt, reset] = useReducer(() => +new Date(), 0)
+
+    const linkTarget = {
+        pathname: "/collection_x",
+        key: lastResetAt,
+        state: {
+            applied: true
+        }
+    };
+
+    function handleHome() {
+
     }
 
-    function handleScan(){
-
+    function handleScan() {
+        reset();
     }
-    return(
+    return (
         <>
-        <Link to="/">
-            <HomeButton onClick={handleHome}>Home</HomeButton> 
-        </Link>
-        <Link to="/scan">
-            <HomeButton onClick={handleScan}>Scan Collection</HomeButton>
-        </Link>
-       </>
+            <Link to="/">
+                <NavButton onClick={handleHome}>Home</NavButton>
+            </Link>
+            <Link to={linkTarget}>
+                <NavButton onClick={handleScan}>Scan Collection</NavButton>
+            </Link>
+        </>
     )
 }
 

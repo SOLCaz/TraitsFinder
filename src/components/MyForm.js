@@ -47,7 +47,7 @@ const SubmitStyle = styled.input`
 
 `
 
-function MyForm() {
+function MyForm({ CID, setCID, contract, setContract, submit, setSubmit }) {
 
 
     let history = useHistory();
@@ -57,14 +57,11 @@ function MyForm() {
     const [last, setLast] = useState('');
     const [checked, setChecked] = useState(false);
 
-    const [CID, setCID] = useState('');
-    const [contract, setContract] = useState('');
-    const [submit, setSubmit] = useState(true);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         history.push(`?first=${first}&last=${last}&isIPFS=${checked}`)
-        setSubmit(!submit)
+        setSubmit(false)
     }
 
     const handleURIChange = (e) => {
@@ -90,29 +87,27 @@ function MyForm() {
 
     return (
 
-            <form onSubmit={e => { handleSubmit(e) }}>
+        <form onSubmit={e => { handleSubmit(e) }}>
 
-                    <label for="collection-data-url">Collection data URL</label>
-                    <input type="text" name="collection-data-url" onChange={handleURIChange} />
-                
-                <label for="checkBox"> metadata hosted on IPFS ?</label>
-                <input type="checkbox" onChange={handleToggle} name="checkBox" />
-                
-                    <label for="contract">Contract address</label>
-                    <input type="text"  name="contract" onChange={handleContractChange} />
-                
-                    <label for="first">First collection ID</label>
-                
-                    <input type="text"  name="first" onChange={handleFirstChange} />
-                
-                    <label for="last">Last Collection ID</label>
-                    
-                    <input type="text"  name="last" onChange={handleLastChange} />
-                <Link to="/collection">
-                    <SubmitStyle type="submit" value="Submit" />
-                </Link>
+            <label for="collection-data-url">Collection data URL</label>
+            <input type="text" name="collection-data-url" onChange={handleURIChange} />
 
-            </form>
+            <label for="checkBox"> metadata hosted on IPFS ?</label>
+            <input type="checkbox" onChange={handleToggle} name="checkBox" />
+
+            <label for="contract">Contract</label>
+            <input type="text" name="contract" onChange={handleContractChange} />
+
+            <label for="first">First collection ID</label>
+
+            <input type="text" name="first" onChange={handleFirstChange} />
+
+            <label for="last">Last Collection ID</label>
+
+            <input type="text" name="last" onChange={handleLastChange} />
+            <SubmitStyle type="submit" value="Submit" />
+
+        </form>
 
     )
 }

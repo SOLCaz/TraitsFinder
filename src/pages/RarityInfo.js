@@ -48,7 +48,7 @@ function useQuery() {
 }
 
 
-function RarityInfo(props){
+function RarityInfo(props) {
     //const { id: CID, contract } = useParams();
     const first = Number(useQuery().get("first"));
     const last = Number(useQuery().get("last"));
@@ -140,8 +140,9 @@ function RarityInfo(props){
 
     return (
         <div className="App">
+            <h1>Explore collections</h1>
 
-            <MyForm CID={CID} setCID={setCID} contract={contract} setContract={setContract} submit={submit} setSubmit={setSubmit}></MyForm>
+            {submit && <MyForm CID={CID} setCID={setCID} contract={contract} setContract={setContract} submit={submit} setSubmit={setSubmit}></MyForm>}
             {(loading === true || isFirstRun.current === true) ? <p>loading</p> :
                 <>
                     <StatusWrapper>

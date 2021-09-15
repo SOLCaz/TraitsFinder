@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Home from '../pages/Home';
 import RarityInfo from '../pages/RarityInfo';
@@ -10,9 +10,10 @@ const Main = () => {
     <Switch> {/* The Switch decides which component to show based on the current URL.*/}
       <Route exact path='/' component={Home}></Route>
       <Route exact path='/scan' component={MyForm}></Route>
-      <Route exact path='/collection' component={RarityInfo}></Route>
+      <Redirect from="/collection_x" to='collection' />
+      <Route exact path='/collection' component={() => <RarityInfo />}></Route>
 
-    </Switch>
+    </Switch >
   );
 }
 
